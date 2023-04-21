@@ -1,0 +1,60 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+body {
+    padding: 1rem;
+}
+header {
+    height: 10vh;
+    display:flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+article {
+    position: relative;
+    border: 1px solid gray;
+    height: 80vh;
+}
+footer {
+    text-align: center;
+    height: 10vh;
+    padding:0.5rem
+}
+.harcos,
+.varazslo {
+    width: 100px;
+    position: absolute;
+}
+
+.harcos img,
+.varazslo img {
+    width: 100%;
+}
+.tulajdonsaglap {
+    display: flex;
+}
+.TulLap {
+    background: rgb(245, 238, 220);
+    /* width: 200px; */
+    padding: 0.5rem;
+    border-radius:5px;
+    border:1px solid rosybrown;
+    margin: 1rem;
+}
+.targy, .etel {
+    width: 50px;
+    position: absolute;
+}
+.etel {
+    width: 3fd0px;
+
+}
+.szikla {
+    width: 50px;
+  
+}
+.targy img, .etel img {
+    width:100%
+}
