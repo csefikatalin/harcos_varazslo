@@ -1,7 +1,9 @@
 import Szereplo from "./Szereplo.js";
 import Targy from "./Targy.js";
 import Kijelzo from "./Kijelzo.js";
+import { Mammut } from "./Targy.js";
 class Jatekter {
+    #mammut = [];
     #sziklak = [];
     #etelek = [];
     #jatekter = [];
@@ -10,7 +12,7 @@ class Jatekter {
     #maxWidth;
     #maxHeight;
     #harcosom = {};
-//png
+    //png
     constructor() {
         this.#init();
         /******Eseménykezelő a az akciók figyeléséhez */
@@ -49,6 +51,10 @@ class Jatekter {
         this.#jatekterGeneralas();
         this.#targyGenerelas("szikla", 3, SZULOELEM, this.#sziklak);
         this.#targyGenerelas("etel", 5, SZULOELEM, this.#etelek);
+        new Mammut(SZULOELEM, "mammut", `kepek/mammut.PNG`, {
+            y: parseInt( this.#maxWidth/2),
+            x: parseInt( this.#maxHeight/2),
+        },);
         console.log(this.#harcosPoz);
         this.#harcosom = new Szereplo(
             SZULOELEM,
@@ -80,16 +86,10 @@ class Jatekter {
 
             let y = parseInt(hely / this.dbx) * 100 + 25;
             let x = parseInt(hely % this.dbx) * 100 + 25;
-            const targy = new Targy(
-                SZULOELEM,
-                tipus,
-                `kepek/${tipus}.PNG`,
-                {
-                    x: x,
-                    y: y,
-                },
-                index
-            );
+            const targy = new Targy(SZULOELEM, tipus, `kepek/${tipus}.PNG`, {
+                x: x,
+                y: y,
+            });
             tomb.push(targy);
         }
     }

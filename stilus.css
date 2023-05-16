@@ -9,11 +9,11 @@
 }
 body {
     padding: 1rem;
-   
-    background:#120e0a url("kepek/barlang.jfif") no-repeat ;
+
+    background: #120e0a url("kepek/barlang.jfif") no-repeat;
     background-size: cover;
     background-clip: content-box;
-    color:beige
+    color: beige;
 }
 header {
     height: 10vh;
@@ -22,9 +22,8 @@ header {
     align-items: center;
 }
 article {
-  
     position: relative;
-  
+
     height: 85vh;
     /*  display:grid;
     grid-template-columns: repeat(var(--dbx),100px);
@@ -44,23 +43,20 @@ footer {
     /* width: 200px; */
     padding: 0.5rem;
     border-radius: 5px;
-opacity: 0.6;
+    opacity: 0.6;
     margin: 1rem;
-    color:#120e0a;
-   width: 150px;
-    font-size:25px;
+    color: #120e0a;
+    width: 150px;
+    font-size: 25px;
 }
-.TulLap p{
-    display:grid;
+.TulLap p {
+    display: grid;
     grid-template-columns: 1fr 1fr;
 }
 .targy,
 .etel {
     width: 50px;
     position: absolute;
-
-
-
 }
 .etel {
     width: 3fd0px;
@@ -73,10 +69,32 @@ opacity: 0.6;
     width: 100%;
 }
 .Harcos {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     position: absolute;
 }
 .Harcos img {
     width: 100%;
 }
+
+.rohan {
+  
+    position: relative;
+    animation-name: mozgas;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+.mammut {
+    width:300px;
+
+}
+@keyframes mozgas {
+    0% {
+      left: calc(50% - 150px);
+    }
+    100% {
+      left: -100%;
+      z-index: -10;
+    }
+  }
