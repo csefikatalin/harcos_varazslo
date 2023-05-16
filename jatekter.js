@@ -10,7 +10,7 @@ class Jatekter {
     #maxWidth;
     #maxHeight;
     #harcosom = {};
-
+//png
     constructor() {
         this.#init();
         /******Eseménykezelő a az akciók figyeléséhez */
@@ -83,7 +83,7 @@ class Jatekter {
             const targy = new Targy(
                 SZULOELEM,
                 tipus,
-                `kepek/${tipus}.png`,
+                `kepek/${tipus}.PNG`,
                 {
                     x: x,
                     y: y,
