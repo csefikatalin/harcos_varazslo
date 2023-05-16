@@ -1,71 +1,109 @@
 import Szereplo from "./Szereplo.js";
 import Targy from "./Targy.js";
+import Kijelzo from "./Kijelzo.js";
 class Jatekter {
     #sziklak = [];
     #etelek = [];
     #jatekter = [];
     #harcosPoz;
     #db;
-    constructor() {
-        const SZULOELEM = document.querySelectorAll("article")[0];
-        this.maxWidth = SZULOELEM.offsetWidth - 150;
-        this.maxHeight = SZULOELEM.offsetHeight - 150;
-        this.jatekterGeneralas();
-        this.targyGenerelas("szikla", 3, SZULOELEM, this.#sziklak);
-        this.targyGenerelas("etel", 5, SZULOELEM, this.#etelek);
-        console.log(this.#etelek);
-        console.log(this.#sziklak);
-        let harcos = document.getElementsByClassName("harcos")[0];
-        const harcosom = new Szereplo(harcos, { x: parseInt(this.maxWidth/2), y: parseInt(this.maxHeight/2) }, "Harcos", {
-            bal: "KeyA",
-            jobb: "KeyF",
-            fel: "KeyD",
-            le: "KeyS",
-        });
-        /******Eseménykezelő a az akciók figyeléséhez */
-        window.addEventListener("keypress", (e) => {
-            const poz=harcosom.getPoz();
-            const harcosIndex =parseInt((poz.x/100)*poz.y/100+poz.y/100)
-            console.log(harcosIndex)
-            if(this.#jatekter[harcosIndex]=="etel"){
-                console.log("étel")
-            }else  if(this.#jatekter[harcosIndex]=="szikla"){
-                console.log("szikla")
-            }
+    #maxWidth;
+    #maxHeight;
+    #harcosom = {};
 
-              
+    constructor() {
+        this.#init();
+        /******Eseménykezelő a az akciók figyeléséhez */
+        $(window).on("keypress", (e) => {
+            const poz = this.#harcosom.getPoz();
+
+            const harcosIndex = parseInt(
+                parseInt(poz.y / 100) * this.dbx + parseInt(poz.x / 100)
+            );
+
+            if (this.#jatekter[harcosIndex].includes("etel")) {
+                this.kijelzo.setEletElem(this.kijelzo.getEletEro().elet + 10);
+                this.#talalat(this.#etelek, 4, harcosIndex);
+            } else if (this.#jatekter[harcosIndex].includes("szikla")) {
+                this.kijelzo.setEroElem(this.kijelzo.getEletEro().ero + 10);
+                this.#talalat(this.#sziklak, 6, harcosIndex);
+            }
+            this.#jatekter[harcosIndex] = "torol";
         });
     }
-    targyGenerelas(tipus, db, SZULOELEM, tomb) {
+    #talalat(tomb, n, harcosIndex) {
+        let elem = this.#jatekter[harcosIndex];
+        let elemIndex = elem.slice(n, n + 1);
+        tomb[elemIndex].targyElem.remove();
+        delete tomb[elemIndex];
+    }
+
+    #init() {
+        this.kijelzo = new Kijelzo(
+            { elet: 100, ero: 100 },
+            $(".tulajdonsaglap")
+        );
+        const SZULOELEM = $("article");
+        this.#maxWidth = SZULOELEM.width();
+        this.#maxHeight = SZULOELEM.height();
+        this.#jatekterGeneralas();
+        this.#targyGenerelas("szikla", 3, SZULOELEM, this.#sziklak);
+        this.#targyGenerelas("etel", 5, SZULOELEM, this.#etelek);
+        console.log(this.#harcosPoz);
+        this.#harcosom = new Szereplo(
+            SZULOELEM,
+            {
+                y: parseInt(this.#harcosPoz / this.dbx) * 100,
+                x: parseInt(this.#harcosPoz % this.dbx) * 100,
+            },
+            "Harcos",
+            {
+                bal: "KeyA",
+                jobb: "KeyF",
+                fel: "KeyD",
+                le: "KeyS",
+            },
+            "kepek/harcos.png"
+        );
+    }
+    #targyGenerelas(tipus, db, SZULOELEM, tomb) {
         for (let index = 0; index < db; index++) {
             let hely = Math.floor(Math.random() * this.#db);
-            while (this.#jatekter[hely] != "") {
+            while (
+                this.#jatekter[hely] == "szikla" ||
+                this.#jatekter[hely] == "etel"
+            ) {
                 hely = Math.floor(Math.random() * this.#db);
             }
 
-            this.#jatekter[hely] = tipus;
+            this.#jatekter[hely] = tipus + index;
 
-            let x = parseInt(hely / this.dbx) * 100;
-            let y = parseInt(hely % this.dby) * 100;
-            const targy = new Targy(SZULOELEM, tipus, `kepek/${tipus}.png`, {
-                x: x,
-                y: y,
-            });
+            let y = parseInt(hely / this.dbx) * 100 + 25;
+            let x = parseInt(hely % this.dbx) * 100 + 25;
+            const targy = new Targy(
+                SZULOELEM,
+                tipus,
+                `kepek/${tipus}.png`,
+                {
+                    x: x,
+                    y: y,
+                },
+                index
+            );
             tomb.push(targy);
         }
-        console.log(this.#jatekter);
     }
-    jatekterGeneralas() {
-        this.dbx = parseInt(this.maxWidth / 100);
-        this.dby = parseInt(this.maxHeight / 100);
+    #jatekterGeneralas() {
+        this.dbx = parseInt(this.#maxWidth / 100);
+        this.dby = parseInt(this.#maxHeight / 100);
+        const rootElem = $(":root");
+        rootElem.css("--dbx", this.dbx);
+        rootElem.css("--dby", this.dby);
         this.#db = this.dbx * this.dby;
-      
         for (let index = 0; index < this.#db; index++) {
             this.#jatekter.push("");
         }
-        console.log(this.#jatekter);
-        this.#harcosPoz = parseInt(this.#db / 2);
-        this.#jatekter[this.#harcosPoz] = "harcos";
+        this.#harcosPoz = parseInt((this.#db * 2) / 3);
     }
 }
 export default Jatekter;

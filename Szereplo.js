@@ -1,23 +1,20 @@
 class Szereplo {
     #x;
     #y;
-    #elet;
-    #ero;
     #nev;
-    constructor(htmlElem, poz, nev, iranyit) {
+    constructor(szuloElem, poz, nev, iranyit, kep) {
+        console.log(poz)
         this.#nev = nev;
-        this.elem = htmlElem;
-        this.#elet = 200;
-        this.#ero = 100;
-        this.tullapElem = document.getElementsByClassName("h_tullap")[0];
-        this.tullapBeallitas();
-        console.log(poz);
-
+        szuloElem.append(` <div class="${nev}" style="left: 100px; top: 100px">
+                    <img src="${kep}" alt="harcos" />
+                </div>`);
+        this.elem = $(`.${nev}`);
         this.setPoz(poz);
-        this.maxWidth = this.elem.parentElement.offsetWidth - 150;
-        this.maxHeight = this.elem.parentElement.offsetHeight - 150;
+        this.maxWidth = this.elem.parent().width() - 100;
+        this.maxHeight = this.elem.parent().height() - 100;
+
         //mozgatás
-        window.addEventListener("keypress", (e) => {
+        $(window).on("keypress", (e) => {
             switch (e.code) {
                 case iranyit.jobb:
                     this.#setXjobb();
@@ -38,24 +35,6 @@ class Szereplo {
         });
     }
 
-    setElet(n) {
-        this.#elet += n;
-        if (this.#elet > 300) {
-            this.#elet = 300;
-        }
-        if (this.#elet < 0) {
-            this.#elet = 0;
-            alert(this.#nev + " Meghalt!");
-        }
-        this.eletElem.innerHTML = this.#elet;
-    }
-    setEro(n) {
-        this.#ero += n;
-        if (this.#ero < 0) {
-            this.#ero = 0;
-        }
-        this.eroElem.innerHTML = this.#ero;
-    }
     getPoz() {
         return { x: this.#x, y: this.#y };
     }
@@ -63,13 +42,13 @@ class Szereplo {
     setPoz(poz) {
         this.#x = poz.x;
         this.#y = poz.y;
-        this.elem.style.left = this.#x + "px";
-        this.elem.style.top = this.#y + "px";
+        this.elem.css("left",this.#x + "px");
+        this.elem.css("top",this.#y + "px");
+     
     }
 
     #setXjobb() {
         this.#x = this.#x > this.maxWidth ? this.maxWidth : this.#x + 10;
-
         this.setPoz({ x: this.#x, y: this.#y });
     }
     #setXbal() {
@@ -83,15 +62,6 @@ class Szereplo {
     #setYle() {
         this.#y = this.#y > this.maxHeight ? this.maxHeight : this.#y + 10;
         this.setPoz({ x: this.#x, y: this.#y });
-    }
-
-    tullapBeallitas() {
-        this.tullapElem.children[0].innerHTML = this.#nev;
-        this.eletElem = this.tullapElem.children[1].children[0];
-        this.eroElem = this.tullapElem.children[2].children[0];
-
-        this.eletElem.innerHTML = this.#elet;
-        this.eroElem.innerHTML = this.#ero;
     }
 }
 export default Szereplo;
