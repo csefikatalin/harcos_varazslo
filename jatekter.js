@@ -2,8 +2,9 @@ import Szereplo from "./Szereplo.js";
 import Targy from "./Targy.js";
 import Kijelzo from "./Kijelzo.js";
 import { Mammut } from "./Targy.js";
+import Info from "./Info.js";
 class Jatekter {
-    #mammut = [];
+    #mammut;
     #sziklak = [];
     #etelek = [];
     #jatekter = [];
@@ -12,26 +13,37 @@ class Jatekter {
     #maxWidth;
     #maxHeight;
     #harcosom = {};
+    #pontszam;
     //png
     constructor() {
         this.#init();
         /******Eseménykezelő a az akciók figyeléséhez */
         $(window).on("keypress", (e) => {
             const poz = this.#harcosom.getPoz();
-
             const harcosIndex = parseInt(
                 parseInt(poz.y / 100) * this.dbx + parseInt(poz.x / 100)
             );
 
             if (this.#jatekter[harcosIndex].includes("etel")) {
                 this.kijelzo.setEletElem(this.kijelzo.getEletEro().elet + 10);
+
                 this.#talalat(this.#etelek, 4, harcosIndex);
             } else if (this.#jatekter[harcosIndex].includes("szikla")) {
                 this.kijelzo.setEroElem(this.kijelzo.getEletEro().ero + 10);
                 this.#talalat(this.#sziklak, 6, harcosIndex);
             }
             this.#jatekter[harcosIndex] = "torol";
+            //győzelem ellenőrzése
+            this.#pontszam =
+                this.kijelzo.getEletEro().elet + this.kijelzo.getEletEro().ero;
+            if (this.#pontszam > 230) {
+                this.#mammut.vaghato = true;
+                this.esemenyTrigger("remeg");
+            }
         });
+        $(window).on("jatekvege", (e)=>{
+            new Info("A játék vége", ["Hurrá! A Harcos elkapta a Mammutot!"], $("body"));
+        })
     }
     #talalat(tomb, n, harcosIndex) {
         let elem = this.#jatekter[harcosIndex];
@@ -41,6 +53,7 @@ class Jatekter {
     }
 
     #init() {
+        this.#pontszam = 200;
         this.kijelzo = new Kijelzo(
             { elet: 100, ero: 100 },
             $(".tulajdonsaglap")
@@ -51,10 +64,10 @@ class Jatekter {
         this.#jatekterGeneralas();
         this.#targyGenerelas("szikla", 3, SZULOELEM, this.#sziklak);
         this.#targyGenerelas("etel", 5, SZULOELEM, this.#etelek);
-        new Mammut(SZULOELEM, "mammut", `kepek/mammut.PNG`, {
-            y: parseInt( this.#maxWidth/2),
-            x: parseInt( this.#maxHeight/2),
-        },);
+        this.#mammut = new Mammut(SZULOELEM, "mammut", `kepek/mammut.PNG`, {
+            y: parseInt(this.#maxWidth / 2),
+            x: parseInt(this.#maxHeight / 2),
+        });
         console.log(this.#harcosPoz);
         this.#harcosom = new Szereplo(
             SZULOELEM,
@@ -104,6 +117,10 @@ class Jatekter {
             this.#jatekter.push("");
         }
         this.#harcosPoz = parseInt((this.#db * 2) / 3);
+    }
+    esemenyTrigger(esemenyNev) {
+        const e = new Event(esemenyNev);
+        window.dispatchEvent(e);
     }
 }
 export default Jatekter;

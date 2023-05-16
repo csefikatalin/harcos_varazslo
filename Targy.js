@@ -16,14 +16,30 @@ class Targy {
 }
 export default Targy;
 export class Mammut extends Targy {
+    #vaghato;
     constructor(szuloElem, tipus, eleresiut, poz) {
         super(szuloElem, tipus, eleresiut, poz);
+        this.#vaghato = false;
         this.targyElem.on("click", () => {
-            this.rohan();
+            if (this.#vaghato) {
+                this.rohan();
+            }
         });
+        $(window).on("remeg", () => {
+            this.targyElem.addClass("remeg");
+        });
+    }
+    set vaghato(ertek) {
+        this.#vaghato = ertek;
     }
     rohan() {
         console.log(this.targyElem);
+        this.targyElem.removeClass("remeg");
         this.targyElem.addClass("rohan");
+        this.esemenyTrigger("jatekvege");
+    }
+    esemenyTrigger(esemenyNev) {
+        const e = new Event(esemenyNev);
+        window.dispatchEvent(e);
     }
 }
