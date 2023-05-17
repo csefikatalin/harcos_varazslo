@@ -41,9 +41,13 @@ class Jatekter {
                 this.esemenyTrigger("remeg");
             }
         });
-        $(window).on("jatekvege", (e)=>{
-            new Info("A játék vége", ["Hurrá! A Harcos elkapta a Mammutot!"], $("body"));
-        })
+        $(window).on("jatekvege", (e) => {
+            new Info(
+                "A játék vége",
+                ["Hurrá! A Harcos elkapta a Mammutot!"],
+                $("body")
+            );
+        });
     }
     #talalat(tomb, n, harcosIndex) {
         let elem = this.#jatekter[harcosIndex];
@@ -61,12 +65,14 @@ class Jatekter {
         const SZULOELEM = $("article");
         this.#maxWidth = SZULOELEM.width();
         this.#maxHeight = SZULOELEM.height();
+        console.log(this.#maxWidth);
+        console.log(this.#maxHeight);
         this.#jatekterGeneralas();
         this.#targyGenerelas("szikla", 3, SZULOELEM, this.#sziklak);
         this.#targyGenerelas("etel", 5, SZULOELEM, this.#etelek);
         this.#mammut = new Mammut(SZULOELEM, "mammut", `kepek/mammut.PNG`, {
-            y: parseInt(this.#maxWidth / 2),
-            x: parseInt(this.#maxHeight / 2),
+            y: parseInt((this.#maxHeight * 2) / 3),
+            x: parseInt(this.#maxWidth / 3),
         });
         console.log(this.#harcosPoz);
         this.#harcosom = new Szereplo(
